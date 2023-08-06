@@ -1,3 +1,8 @@
+# Ignores specific to my workflow
+cmake-build-*/
+build/
+
+# Copied from CMake .gitignore template
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
