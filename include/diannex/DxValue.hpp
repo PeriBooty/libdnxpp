@@ -75,7 +75,7 @@ namespace diannex
 
     class DxValue
     {
-        using array_type = DxVec<DxValue>;
+        using array_type = DxVec<DxPtr<DxValue>>;
         using variant_type = DxVariant<
             int, double, DxStr,
             array_type, DxAny>;

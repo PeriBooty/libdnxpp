@@ -144,7 +144,8 @@ namespace diannex
                 auto arr = std::move(m_stack.pop());
                 if (arr.type() != DxValueType::Array)
                     panic("Array get on variable which is not an array");
-                m_stack.push(arr.get<DxVec<DxValue>>()[ind]);
+                auto vArr = arr.get<DxVec<DxPtr<DxValue>>>();
+                m_stack.push(*(vArr[ind]));
                 break;
             }
 
@@ -155,7 +156,8 @@ namespace diannex
                 auto& arr = m_stack.peek();
                 if (arr.type() != DxValueType::Array)
                     panic("Array set on variable which is not an array");
-                arr.get_mut<DxVec<DxValue>>()[ind] = value;
+                auto& vArr = arr.get_mut<DxVec<DxPtr<DxValue>>>();
+                vArr[ind] = std::make_shared<DxValue>(value);
                 break;
             }
 
