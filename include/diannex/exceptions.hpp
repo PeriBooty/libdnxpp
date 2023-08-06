@@ -18,7 +18,13 @@
 #define LIBDIANNEX_EXCEPTIONS_HPP
 
 #include <exception>
+
+#ifndef USE_FMTLIB
 #include <format>
+#else
+#include <fmt/core.h>
+namespace std { using namespace fmt; }
+#endif
 
 #include "common.hpp"
 
@@ -30,7 +36,11 @@ namespace diannex
     public:
         template<class... Args>
         explicit diannex_exception(const DxStrRef fmt, const Args& ... args)
+        #ifndef USE_FMTLIB
             : m_what(std::format(fmt, args...))
+        #else
+            : m_what(std::format(std::runtime(fmt), args...))
+        #endif
         {}
 
         [[nodiscard]] const char* what() const override
