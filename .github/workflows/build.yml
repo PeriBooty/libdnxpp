@@ -19,7 +19,7 @@ jobs:
       - name: "Setup vcpkg"
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: "2023.07.21"
+          vcpkgGitCommitId: "78b61582c9e093fda56a01ebb654be15a0033897"
 
       - name: "Configure project"
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DCMAKE_TOOLCHAIN_FILE='${{github.workspace}}/vcpkg/scripts/buildsystem/vcpkg.cmake'
