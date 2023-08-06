@@ -41,18 +41,19 @@ namespace diannex
         template<std::default_initializable T>
         auto read() -> T
         {
-            T value;
-            read_n(sizeof(T), &value);
-            return value;
-        }
-
-        template<>
-        auto read() -> DxStr
-        {
-            DxStrBuilder ss;
-            for (char c = read<char>(); c != '\0'; c = read<char>())
-                ss << c;
-            return ss.str();
+            if constexpr (std::is_same_v<T, DxStr>)
+            {
+                DxStrBuilder ss;
+                for (char c = read<char>(); c != '\0'; c = read<char>())
+                    ss << c;
+                return ss.str();
+            }
+            else
+            {
+                T value;
+                read_n(sizeof(T), &value);
+                return value;
+            }
         }
 
         DxByteBuf read_block();

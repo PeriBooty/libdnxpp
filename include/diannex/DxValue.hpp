@@ -49,6 +49,30 @@ namespace diannex
         return names[(int)type];
     }
 
+    namespace detail
+    {
+        template<DxValueType T>
+        struct dx_safe_type;
+
+        template<>
+        struct dx_safe_type<DxValueType::Integer>
+        {
+            using raw = int;
+        };
+
+        template<>
+        struct dx_safe_type<DxValueType::Double>
+        {
+            using raw = double;
+        };
+
+        template<>
+        struct dx_safe_type<DxValueType::String>
+        {
+            using raw = std::string;
+        };
+    }
+
     class DxValue
     {
         using array_type = DxVec<DxValue>;
@@ -82,28 +106,7 @@ namespace diannex
         [[nodiscard]] auto get_mut() -> decltype(std::get<T>(*m_value))
         { return std::get<T>(*m_value); }
 
-        template<DxValueType T>
-        struct dx_safe_type;
-
-        template<>
-        struct dx_safe_type<DxValueType::Integer>
-        {
-            using raw = int;
-        };
-
-        template<>
-        struct dx_safe_type<DxValueType::Double>
-        {
-            using raw = double;
-        };
-
-        template<>
-        struct dx_safe_type<DxValueType::String>
-        {
-            using raw = std::string;
-        };
-
-        template<DxValueType type, typename T = typename dx_safe_type<type>::raw>
+        template<DxValueType type, typename T = typename detail::dx_safe_type<type>::raw>
         [[nodiscard]] auto safe_get() const -> T
         {
             if constexpr (type == DxValueType::Integer)
