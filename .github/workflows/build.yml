@@ -1,0 +1,28 @@
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: "Install CMake and Ninja"
+        uses: lukka/get-cmake@latest
+        
+      - name: "Setup vcpkg"
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: "2023.07.21"
+
+      - name: "Configure project"
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DCMAKE_TOOLCHAIN_FILE='${{github.workspace}}/vcpkg/scripts/buildsystem/vcpkg.cmake'
+
+      - name: "Build project"
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
