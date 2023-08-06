@@ -24,9 +24,25 @@
 namespace diannex
 {
     // Forward Declaration
+    class DxInterpreter;
+
     namespace _internal
     {
-        class DxDefinitionInstance;
+        class DxDefinitionInstance
+        {
+            DxDefinition m_target;
+            DxWeakPtr<DxData> m_data;
+            DxWeakPtr<DxInterpreter> m_interpreter;
+
+            DxOpt<DxStr> m_cachedValue{ std::nullopt };
+            int m_cachedId{ -1 };
+        public:
+            DxDefinitionInstance(DxDefinition target, DxWeakPtr<DxData> data, DxWeakPtr<DxInterpreter> interpreter);
+
+            DxStrRef value();
+
+            DxStrRef valueNoCache();
+        };
     }
 
     class DxInterpreter : std::enable_shared_from_this<DxInterpreter>
@@ -218,25 +234,6 @@ namespace diannex
     public:
         interpreter_runtime_exception(const DxInterpreter& interpreter, const std::string_view& message);
     };
-
-    namespace _internal
-    {
-        class DxDefinitionInstance
-        {
-            DxDefinition m_target;
-            DxWeakPtr<DxData> m_data;
-            DxWeakPtr<DxInterpreter> m_interpreter;
-
-            DxOpt<DxStr> m_cachedValue{ std::nullopt };
-            int m_cachedId{ -1 };
-        public:
-            DxDefinitionInstance(DxDefinition target, DxWeakPtr<DxData> data, DxWeakPtr<DxInterpreter> interpreter);
-
-            DxStrRef value();
-
-            DxStrRef valueNoCache();
-        };
-    }
 }
 
 #endif //LIBDIANNEX_DXINTERPRETER_HPP

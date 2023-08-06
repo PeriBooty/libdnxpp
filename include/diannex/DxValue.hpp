@@ -89,6 +89,22 @@ namespace diannex
 
         explicit DxValue(bool value);
 
+        DxValue(DxValue&& other) noexcept
+            : m_value(std::move(other.m_value)),
+              m_type(std::exchange(other.m_type, DxValueType::Unknown))
+        {}
+
+        DxValue(const DxValue& other) = default;
+
+        DxValue& operator=(const DxValue& other) = default;
+
+        DxValue& operator=(DxValue&& other) noexcept
+        {
+            m_value = std::move(other.m_value);
+            m_type = std::exchange(other.m_type, DxValueType::Unknown);
+            return *this;
+        }
+
         [[nodiscard]] DxValue convert(DxValueType newType) const;
 
         [[nodiscard]] inline DxValueType type() const

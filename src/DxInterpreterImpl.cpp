@@ -20,6 +20,8 @@
 #include "utils/BinaryReader.hpp"
 #include "utils/generator.hpp"
 
+#include <cmath>
+
 namespace diannex
 {
     void DxInterpreter::interpret(diannex::DxByteSpan buff)
@@ -341,7 +343,7 @@ namespace diannex
                 auto v2 = m_stack.pop();
                 auto v1 = m_stack.pop();
                 m_stack.push(DxValue{
-                    pow(
+                    std::pow(
                         v1.safe_get<DxValueType::Double>(),
                         v2.safe_get<DxValueType::Double>()),
                     DxValueType::Integer });
