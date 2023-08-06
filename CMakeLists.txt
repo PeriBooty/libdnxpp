@@ -4,7 +4,7 @@ project(libdnxpp)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-option(BUILD_SAMPLE "Builds a sample program that uses the interepreter" ON)
+option(BUILD_SAMPLE "Builds a sample program that uses the interepreter" OFF)
 
 set(ZLIB_USE_STATIC_LIBS ON)
 find_package(ZLIB REQUIRED)

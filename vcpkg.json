@@ -8,10 +8,15 @@
       "version>=": "1.2.13"
     }
   ],
-  "dev-dependencies": [
-    {
-      "name": "raylib",
-      "version>=": "4.5.0#1"
+  "features": {
+    "sample": {
+      "description": "Sample Diannex-enabled Game",
+      "dependencies": [
+        {
+          "name": "raylib",
+          "version>=": "4.5.0#1"
+        }
+      ]
     }
-  ]
+  }
 }
