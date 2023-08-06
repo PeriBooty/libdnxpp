@@ -16,6 +16,8 @@
  *====================================================================================================================*/
 #include "DxValue.hpp"
 
+#include <cmath>
+
 namespace diannex
 {
     DxValue::DxValue(DxValue::value_type value, DxValueType type)
@@ -55,7 +57,7 @@ namespace diannex
                 switch (newType)
                 {
                     case DxValueType::Integer:
-                        return DxValue{ (int)floor(std::get<double>(*m_value)), DxValueType::Integer };
+                        return DxValue{ (int)std::floor(std::get<double>(*m_value)), DxValueType::Integer };
                     case DxValueType::String:
                         return DxValue{ std::to_string(std::get<double>(*m_value)), DxValueType::String };
                     default:

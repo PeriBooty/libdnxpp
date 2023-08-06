@@ -49,39 +49,8 @@ namespace diannex
         return names[(int)type];
     }
 
-    class DxValue
+    namespace detail
     {
-        using array_type = DxVec<DxValue>;
-        using variant_type = DxVariant<
-            int, double, DxStr,
-            array_type, DxAny>;
-        using value_type = DxOpt<variant_type>;
-
-        value_type m_value;
-        DxValueType m_type;
-
-    public:
-        explicit DxValue(value_type value = std::nullopt, DxValueType type = DxValueType::Undefined);
-
-        explicit DxValue(bool value);
-
-        [[nodiscard]] DxValue convert(DxValueType newType) const;
-
-        [[nodiscard]] inline DxValueType type() const
-        { return m_type; }
-
-        template<class T>
-        requires
-        requires() { std::get<T>(*m_value); }
-        [[nodiscard]] constexpr auto get() const -> decltype(std::get<T>(*m_value))
-        { return std::get<T>(*m_value); }
-
-        template<class T>
-        requires
-        requires() { std::get<T>(*m_value); }
-        [[nodiscard]] auto get_mut() -> decltype(std::get<T>(*m_value))
-        { return std::get<T>(*m_value); }
-
         template<DxValueType T>
         struct dx_safe_type;
 
@@ -102,8 +71,58 @@ namespace diannex
         {
             using raw = std::string;
         };
+    }
 
-        template<DxValueType type, typename T = typename dx_safe_type<type>::raw>
+    class DxValue
+    {
+        using array_type = DxVec<DxPtr<DxValue>>;
+        using variant_type = DxVariant<
+            int, double, DxStr,
+            array_type, DxAny>;
+        using value_type = DxOpt<variant_type>;
+
+        value_type m_value;
+        DxValueType m_type;
+
+    public:
+        explicit DxValue(value_type value = std::nullopt, DxValueType type = DxValueType::Undefined);
+
+        explicit DxValue(bool value);
+
+        DxValue(DxValue&& other) noexcept
+            : m_value(std::move(other.m_value)),
+              m_type(std::exchange(other.m_type, DxValueType::Unknown))
+        {}
+
+        DxValue(const DxValue& other) = default;
+
+        DxValue& operator=(const DxValue& other) = default;
+
+        DxValue& operator=(DxValue&& other) noexcept
+        {
+            m_value = std::move(other.m_value);
+            m_type = std::exchange(other.m_type, DxValueType::Unknown);
+            return *this;
+        }
+
+        [[nodiscard]] DxValue convert(DxValueType newType) const;
+
+        [[nodiscard]] inline DxValueType type() const
+        { return m_type; }
+
+        template<class T>
+        requires
+        requires() { std::get<T>(*m_value); }
+        [[nodiscard]] constexpr auto get() const -> decltype(std::get<T>(*m_value))
+        { return std::get<T>(*m_value); }
+
+        template<class T>
+        requires
+        requires() { std::get<T>(*m_value); }
+        [[nodiscard]] auto get_mut() -> decltype(std::get<T>(*m_value))
+        { return std::get<T>(*m_value); }
+
+        template<DxValueType type, typename T = typename detail::dx_safe_type<type>::raw>
         [[nodiscard]] auto safe_get() const -> T
         {
             if constexpr (type == DxValueType::Integer)
