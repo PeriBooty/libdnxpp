@@ -1,6 +1,4 @@
 @PACKAGE_INIT@
 
-find_package(libdnxpp CONFIG REQUIRED)
-
 include(${CMAKE_CURRENT_LIST_DIR}/libdnxpp-targets.cmake)
 check_required_components(libdnxpp)
