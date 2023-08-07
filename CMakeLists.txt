@@ -1,8 +1,18 @@
 cmake_minimum_required(VERSION 3.26)
-project(libdnxpp)
+
+set(libdnxpp_VERSION 1.0.1)
+
+project(libdnxpp
+        VERSION ${libdnxpp_VERSION}
+        DESCRIPTION "Reimplementation of the Diannex Interpreter for Modern C++ (C++20/23)"
+        HOMEPAGE_URL "https://github.com/PeriBooty/libdnxpp"
+        LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 option(BUILD_SAMPLE "Builds a sample program that uses the interepreter" OFF)
 option(USE_FMTLIB "Use fmtlib/fmt to provide <format> functionality" OFF)
@@ -33,7 +43,15 @@ add_library(libdnxpp SHARED
         src/utils/BinaryReader.cpp
         src/internal/DxDefinitionInstance.cpp
 )
-target_include_directories(libdnxpp PUBLIC include/ PRIVATE include/diannex)
+add_library(Diannex::Interpreter ALIAS libdnxpp)
+target_compile_features(libdnxpp PUBLIC cxx_std_23)
+target_include_directories(libdnxpp
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/diannex>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_ICLUDEDIR}/diannex>)
 target_link_libraries(libdnxpp PRIVATE ZLIB::ZLIB)
 
 if (USE_FMTLIB)
@@ -41,6 +59,27 @@ if (USE_FMTLIB)
     target_link_libraries(libdnxpp PRIVATE fmt::fmt)
     target_compile_definitions(libdnxpp PRIVATE -DUSE_FMTLIB)
 endif ()
+
+configure_package_config_file(cmake/config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/libdnxpp-config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/libdnxpp
+        NO_SET_AND_CHECK_MACRO)
+write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/libdnxpp-config-version.cmake
+        VERSION ${libdnxpp_VERSION}
+        COMPATIBILITY SameMajorVersion)
+install(
+        FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/libdnxpp-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/libdnxpp-config-version.cmake
+        DESTINATION
+        ${CMAKE_INSTALL_DATADIR}/libdnxpp)
+
+install(TARGETS libdnxpp EXPORT libdnxpp-targets)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(EXPORT libdnxpp-targets
+        NAMESPACE Diannex::
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/libdnxpp)
 
 if (BUILD_SAMPLE)
     add_subdirectory(sample/)
