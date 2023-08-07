@@ -43,7 +43,7 @@ add_library(libdnxpp SHARED
         src/utils/BinaryReader.cpp
         src/internal/DxDefinitionInstance.cpp
 )
-add_library(Diannex::Interpreter ALIAS libdnxpp)
+add_library(Diannex::libdnxpp ALIAS libdnxpp)
 target_compile_features(libdnxpp PUBLIC cxx_std_23)
 target_include_directories(libdnxpp
         PUBLIC
