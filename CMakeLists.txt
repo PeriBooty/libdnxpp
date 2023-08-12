@@ -13,6 +13,9 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+endif ()
 
 option(BUILD_SAMPLE "Builds a sample program that uses the interepreter" OFF)
 option(USE_FMTLIB "Use fmtlib/fmt to provide <format> functionality" OFF)
@@ -82,4 +85,8 @@ install(EXPORT libdnxpp-targets
 
 if (BUILD_SAMPLE)
     add_subdirectory(sample/)
+endif ()
+
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_subdirectory(tests/)
 endif ()
