@@ -30,7 +30,7 @@ struct FlagStore
      * To verify that the `registerFunctor` method doesn't copy this functor, which would break its operation
      */
     FlagStore(const FlagStore& other)
-    { throw std::exception("I'VE BEEN COPYIED!"); }
+    { throw std::runtime_error("I'VE BEEN COPYIED!"); }
 
     using getter = std::function<DxValue(const std::string&)>;
     using setter = std::function<void(const std::string&, const DxValue&)>;
