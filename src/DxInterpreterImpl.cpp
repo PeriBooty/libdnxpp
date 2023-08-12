@@ -18,7 +18,6 @@
 
 #include "DxInstructions.hpp"
 #include "utils/BinaryReader.hpp"
-#include "utils/generator.hpp"
 
 #include <cmath>
 
@@ -118,12 +117,10 @@ namespace diannex
                 else
                     str = m_data->string(textIdx);
 
-                auto gen = [this]() -> generator<DxStr>
-                {
-                    while (true)
-                        co_yield DxStr(this->m_stack.pop().convert(DxValueType::String).get<std::string>());
-                }();
-                auto elems = generate_vector<DxStr>(elemCount, gen);
+                DxVec<DxStr> elems(elemCount);
+                for (int i = 0; i < elemCount; ++i)
+                    elems[i] = std::move(m_stack.pop().safe_get<DxValueType::String>());
+
                 m_stack.push(DxValue{ interpolate(str, elems), DxValueType::String });
                 break;
             }

@@ -18,7 +18,6 @@
 #define LIBDIANNEX_UTILS_HPP
 
 #include "utils/BinaryReader.hpp"
-#include "utils/generator.hpp"
 #include "utils/DxStack.hpp"
 
 #endif //LIBDIANNEX_UTILS_HPP

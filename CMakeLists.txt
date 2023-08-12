@@ -29,7 +29,6 @@ add_library(libdnxpp SHARED
         include/diannex/models.hpp
         include/diannex/utils.hpp
         include/diannex/utils/BinaryReader.hpp
-        include/diannex/utils/generator.hpp
         include/diannex/utils/DxStack.hpp
         include/diannex/internal/DxValueConcepts.hpp
         include/diannex/DxInstructions.hpp
