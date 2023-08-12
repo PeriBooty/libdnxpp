@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-set(libdnxpp_VERSION 1.0.1)
+set(libdnxpp_VERSION 1.1.0)
 
 project(libdnxpp
         VERSION ${libdnxpp_VERSION}

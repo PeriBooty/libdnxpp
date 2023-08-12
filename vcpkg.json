@@ -1,6 +1,6 @@
 {
   "name": "libdnxpp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "builtin-baseline": "2a0afc853e06d4f578dac8368f12592a86469a25",
   "dependencies": [
     {
