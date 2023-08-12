@@ -265,7 +265,7 @@ namespace diannex
                         m_stack.push(DxValue{ -v.get<double>(), DxValueType::Double });
                         break;
                     default:
-                        panic(std::format("Cannot negate type {}", type_name(t)));
+                        panic(DxFormat("Cannot negate type {}", type_name(t)));
                 }
                 break;
             }
@@ -283,7 +283,7 @@ namespace diannex
                         m_stack.push(DxValue{ !(bool)(v.get<double>()) ? 1.0 : 0.0, DxValueType::Double });
                         break;
                     default:
-                        panic(std::format("Cannot invert type {}", type_name(t)));
+                        panic(DxFormat("Cannot invert type {}", type_name(t)));
                 }
                 break;
             }

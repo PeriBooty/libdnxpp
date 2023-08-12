@@ -58,8 +58,8 @@ target_link_libraries(libdnxpp PRIVATE ZLIB::ZLIB)
 
 if (USE_FMTLIB)
     find_package(fmt CONFIG REQUIRED)
-    target_link_libraries(libdnxpp PRIVATE fmt::fmt)
-    target_compile_definitions(libdnxpp PRIVATE -DUSE_FMTLIB)
+    target_link_libraries(libdnxpp PUBLIC fmt::fmt)
+    target_compile_definitions(libdnxpp PUBLIC -DUSE_FMTLIB)
 endif ()
 
 configure_package_config_file(cmake/config.cmake.in

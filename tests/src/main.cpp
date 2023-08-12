@@ -112,7 +112,7 @@ TEST_CASE("Interpreter can run sample scene")
         for (int i = 0; i < 5; ++i)
         {
             REQUIRE_NOTHROW(interpreter.resumeScene());
-            REQUIRE_EQ(currentText, std::format("This is an example function, being passed {}", i));
+            REQUIRE_EQ(currentText, DxFormat("This is an example function, being passed {}", i));
         }
 
         REQUIRE_NOTHROW(interpreter.resumeScene());
