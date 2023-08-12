@@ -13,6 +13,9 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+endif ()
 
 option(BUILD_SAMPLE "Builds a sample program that uses the interepreter" OFF)
 option(USE_FMTLIB "Use fmtlib/fmt to provide <format> functionality" OFF)
@@ -29,7 +32,6 @@ add_library(libdnxpp SHARED
         include/diannex/models.hpp
         include/diannex/utils.hpp
         include/diannex/utils/BinaryReader.hpp
-        include/diannex/utils/generator.hpp
         include/diannex/utils/DxStack.hpp
         include/diannex/internal/DxValueConcepts.hpp
         include/diannex/DxInstructions.hpp
@@ -56,8 +58,8 @@ target_link_libraries(libdnxpp PRIVATE ZLIB::ZLIB)
 
 if (USE_FMTLIB)
     find_package(fmt CONFIG REQUIRED)
-    target_link_libraries(libdnxpp PRIVATE fmt::fmt)
-    target_compile_definitions(libdnxpp PRIVATE -DUSE_FMTLIB)
+    target_link_libraries(libdnxpp PUBLIC fmt::fmt)
+    target_compile_definitions(libdnxpp PUBLIC -DUSE_FMTLIB)
 endif ()
 
 configure_package_config_file(cmake/config.cmake.in
@@ -83,4 +85,8 @@ install(EXPORT libdnxpp-targets
 
 if (BUILD_SAMPLE)
     add_subdirectory(sample/)
+endif ()
+
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_subdirectory(tests/)
 endif ()

@@ -30,6 +30,12 @@
 #include <concepts>
 #include <functional>
 
+#ifndef USE_FMTLIB
+#include <format>
+#else
+#include <fmt/core.h>
+#endif
+
 namespace diannex
 {
     template<typename T>
@@ -64,6 +70,22 @@ namespace diannex
     template<class T>
     concept DxStrLike =
     requires(const T& val) {{ std::string(val) } -> std::same_as<std::string>; };
+
+    #ifndef USE_FMTLIB
+    template<class... Args>
+    using DxFormatStr = std::format_string<Args...>;
+
+    template<class... Types>
+    [[nodiscard]] DxStr DxFormat(const DxFormatStr<Types...> fmt, Types&& ... args)
+    { return std::format(std::move(fmt), std::forward<Types>(args)...); }
+    #else
+    template<class... Args>
+    using DxFormatStr = fmt::format_string<Args...>;
+
+    template<class... Types>
+    [[nodiscard]] DxStr DxFormat(const DxFormatStr<Types...> fmt, Types&& ... args)
+    { return fmt::format(fmt, std::forward<Types>(args)...); }
+    #endif
 }
 
 #endif //LIBDIANNEX_COMMON_HPP

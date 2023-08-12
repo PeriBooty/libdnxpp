@@ -27,6 +27,11 @@ struct FlagStore
 {
     FlagStore() = default;
 
+    /*
+     * These are used as type hints for the `DxInterpreter::registerFunctor` method,
+     * this allows the method to differentiate between the two overloads, since
+     * otherwise it will be unable to deduce the types.
+     */
     using getter = std::function<diannex::DxValue(const std::string&)>;
     using setter = std::function<void(const std::string&, const diannex::DxValue&)>;
 
