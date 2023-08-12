@@ -45,11 +45,14 @@ Game::Game()
     m_interpreter.choiceHandler(Bind(onChoice));
 
     /*
-     * DxInterpreter::registerFunction deduces types from your method signature, so overloads
-     * you will need to pass in a signature type parameter to the method.
+     * For functors like `FlagStore` you must use `DxInterpreter::registerFunctor` to avoid making
+     * a copy of the functor class, which would leave you with an inaccessible state.
+     *
+     * Additionally, if you have multiple overloads of `operator()` then you must manually specify
+     * their type because the method won't be able to deduce it automatically it.
      */
-    m_interpreter.registerFunction<FlagStore::getter>("getFlag", m_flagStore);
-    m_interpreter.registerFunction<FlagStore::setter>("setFlag", m_flagStore);
+    m_interpreter.registerFunctor<FlagStore::getter>("getFlag", m_flagStore);
+    m_interpreter.registerFunctor<FlagStore::setter>("setFlag", m_flagStore);
 
     /*
      * Since there are no overloads for `awardPoints` and `deductPoints` the function will correctly

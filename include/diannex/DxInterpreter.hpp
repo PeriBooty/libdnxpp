@@ -43,6 +43,19 @@ namespace diannex
 
             DxStrRef valueNoCache();
         };
+
+        template<class Expected, class Actual>
+        auto make_copyable_functor(Actual&& func) -> Expected
+        {
+            auto raw = &func;
+            return [raw](auto&& ... args) -> decltype(auto)
+            {
+                return (*raw)(decltype(args)(args)...);
+            };
+        }
+
+        template<typename InT, typename OutT>
+        concept constructible_to = std::constructible_from<OutT, InT>;
     }
 
     class DxInterpreter : std::enable_shared_from_this<DxInterpreter>
@@ -157,7 +170,7 @@ namespace diannex
         void registerFunctionSafe(const DxStrRef& name, const DxFuncSig& func);
 
         template<typename R, DxCoercableFrom... Args>
-        void registerFunctionInternal(const DxStrRef& name, DxFunc<R(Args...)> func)
+        void registerFunctionInternal(const DxStrRef& name, DxFunc<R(Args...)>&& func)
         {
             registerFunctionSafe(name,
                                  [func = std::forward<DxFunc<R(Args...)>>(func)](const DxVec<DxValue>& args) -> DxValue
@@ -173,6 +186,12 @@ namespace diannex
         void registerFunction(const DxStrRef& name, Func&& func)
         {
             registerFunctionInternal(name, std::function(std::forward<Func>(func)));
+        }
+
+        template<typename Func>
+        void registerFunctor(const DxStrRef& name, _internal::constructible_to<Func> auto&& func)
+        {
+            registerFunctionInternal(name, _internal::make_copyable_functor<Func>(func));
         }
 
         DxInterpreter& textHandler(TextCallback func);
