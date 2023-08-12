@@ -19,13 +19,6 @@
 
 #include <exception>
 
-#ifndef USE_FMTLIB
-#include <format>
-#else
-#include <fmt/core.h>
-namespace std { using namespace fmt; }
-#endif
-
 #include "common.hpp"
 
 namespace diannex
@@ -35,12 +28,12 @@ namespace diannex
         DxStr m_what;
     public:
         template<class... Args>
-        explicit diannex_exception(const DxStrRef fmt, const Args& ... args)
-        #ifndef USE_FMTLIB
-            : m_what(std::format(fmt, args...))
-        #else
-            : m_what(std::format(std::runtime(fmt), args...))
-        #endif
+        constexpr explicit diannex_exception(const DxFormatStr<Args...> fmt, Args&& ... args)
+            : m_what(DxFormat(fmt, std::forward<Args>(args)...))
+        {}
+
+        explicit diannex_exception(const DxStrRef str)
+            : m_what(str)
         {}
 
         [[nodiscard]] const char* what() const noexcept override
