@@ -83,6 +83,8 @@ install(EXPORT libdnxpp-targets
         NAMESPACE Diannex::
         DESTINATION ${CMAKE_INSTALL_DATADIR}/libdnxpp)
 
+add_subdirectory(compiler/)
+
 if (BUILD_SAMPLE)
     add_subdirectory(sample/)
 endif ()
