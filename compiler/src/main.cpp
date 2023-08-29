@@ -585,7 +585,7 @@ int main(int argc, char** argv)
                     std::cout << "[" << pair.first << ":?:?] ";
                 else
                     std::cout << "[" << pair.first << ":" << e.line << ":" << e.column << "] ";
-                
+
                 switch (e.type)
                 {
                 case BytecodeError::ErrorType::SceneAlreadyExists:
@@ -627,9 +627,9 @@ int main(int argc, char** argv)
     {
         // Output string IDs to necessary files
         std::cout << "Writing string IDs..." << std::endl;
-        
+
         std::vector<char> fileData;
-        for (auto& it = context.stringIdPositions.begin(); it != context.stringIdPositions.end(); ++it)
+        for (auto it = context.stringIdPositions.begin(); it != context.stringIdPositions.end(); ++it)
         {
             const std::string& currentFile = it->first;
 
@@ -709,14 +709,14 @@ int main(int argc, char** argv)
         s.close();
     }
 
-    if (context.project->options.translationPrivate) 
+    if (context.project->options.translationPrivate)
     {
         std::cout << "Writing private translation file..." << std::endl;
 
         const fs::path privateOutput = fs::absolute(baseDirectory / project.options.translationPrivateOutDir);
         if (!fs::exists(privateOutput))
             fs::create_directories(privateOutput);
-        
+
         const std::string privFileName = (project.options.translationPrivateName.empty() ? binaryName : project.options.translationPrivateName) + ".dxt";
 
         std::ofstream s;
